@@ -1,0 +1,36 @@
+name: README check
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - README.md
+
+permissions:
+  contents: read
+
+concurrency:
+  group: readme-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  readme-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+
+      - name: Install Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 26.7.0
+
+      - name: Validate README
+        run: >-
+          node --input-type=module -e
+          'import { readFileSync } from "node:fs";
+          const text = readFileSync("README.md", "utf8");
+          if (!/^#\s+Factory Fixture\s*$/m.test(text) ||
+          !/autonomous engineering software factory/i.test(text)) process.exit(1);'
