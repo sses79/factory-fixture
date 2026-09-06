@@ -1,0 +1,66 @@
+version: 1
+repository: sses79/factory-fixture
+default_branch: main
+
+context:
+  enabled: true
+  classification: public
+  allowed_targets:
+    - sses79/factory-fixture
+  allowed_model_policies:
+    - codex-sdk-openrouter-public-readonly-live
+    - codex-sdk-openrouter-public-write-proposal-live
+    - claude-agent-sdk-openrouter-public-reviewer-live
+  denied_paths:
+    - .env
+    - .env.*
+    - "*.pem"
+    - "*.key"
+    - .git/**
+    - .github/**
+    - .factory/**
+  max_context_files: 8
+  max_context_file_bytes: 32768
+  max_context_bytes: 65536
+  allow_public_output: true
+
+paths:
+  writable:
+    - README.md
+  denied:
+    - .env
+    - .env.*
+    - "*.pem"
+    - "*.key"
+    - .git/**
+    - .github/**
+    - .factory/**
+
+commands:
+  readme-check:
+    argv:
+      - node
+      - --input-type=module
+      - -e
+      - >-
+        import { readFileSync } from "node:fs";
+        const text = readFileSync("README.md", "utf8");
+        if (!/^#\s+Factory Fixture\s*$/m.test(text) || !/autonomous engineering software factory/i.test(text)) process.exit(1);
+    timeout_seconds: 30
+    idempotent: true
+    allowed_hosts: []
+    validation_kind: test
+    evidence_outputs: []
+
+required_checks:
+  - readme-check
+
+environment:
+  allowed_variables: []
+
+network:
+  default: deny
+
+pull_request:
+  draft: true
+  auto_merge: false
