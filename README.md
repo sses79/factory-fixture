@@ -14,3 +14,7 @@ This fixture is intentionally small and public so that fully automated engineeri
 ## Scope
 
 Changes contributed to this fixture are kept minimal and are reviewed through the normal pull request process. No merge, deployment, or default-branch write authority is assumed by the fixture itself. Any proposed change is authored as a draft pull request targeting main so reviewers can validate it before it is merged.
+
+## Checks
+
+The repository's only declared check is readme-check. It requires README.md to keep the level-1 heading "# Factory Fixture" and to mention the autonomous engineering software factory. README.md is the only writable path in this repository.
